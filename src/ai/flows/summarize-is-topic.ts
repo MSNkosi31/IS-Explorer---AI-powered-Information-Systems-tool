@@ -62,7 +62,7 @@ const summarizeIsTopicFlow = ai.defineFlow(
     outputSchema: SummarizeIsTopicOutputSchema,
   },
   async (input) => {
-    const filePath = path.join(process.cwd(), 'base_data', input.fileName);
+    const filePath = path.join(process.cwd(), 'src', 'base_data', input.fileName);
     let content = '';
 
     try {

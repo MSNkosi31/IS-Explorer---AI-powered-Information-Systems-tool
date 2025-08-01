@@ -7,9 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Bot, Loader2, Send, Sparkles } from 'lucide-react';
+import { Bot, Loader2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import useLocalStorage from '@/hooks/use-local-storage';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type Topic = {
   id: string;
@@ -36,12 +37,9 @@ export default function TopicClient({ topic }: TopicClientProps) {
     if (!viewedTopics.includes(topic.id)) {
       setViewedTopics([...viewedTopics, topic.id]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topic.id]);
-
-
-  const handleSummarize = () => {
+    
     startSummaryTransition(async () => {
+      setSummary(''); // Clear previous summary
       const result = await summarizeIsTopic({ topic: topic.name, fileName: topic.fileName });
       if (result.summary) {
         setSummary(result.summary);
@@ -53,7 +51,9 @@ export default function TopicClient({ topic }: TopicClientProps) {
         });
       }
     });
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topic.id, topic.name, topic.fileName]);
+
 
   const handleAskQuestion = () => {
     if (!question.trim()) return;
@@ -80,27 +80,23 @@ export default function TopicClient({ topic }: TopicClientProps) {
           <CardDescription>{topic.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          {summary ? (
-            <div className="prose prose-stone dark:prose-invert max-w-none text-foreground whitespace-pre-wrap font-body">
-              {summary}
+          {isSummaryLoading ? (
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg">
-              <Sparkles className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Generate AI Summary</h3>
-              <p className="text-muted-foreground mb-4 max-w-md">
-                Click the button below to get an AI-powered summary of this topic from its source document.
-              </p>
-              <Button onClick={handleSummarize} disabled={isSummaryLoading}>
-                {isSummaryLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Generate Summary
-              </Button>
+            <div className="prose prose-stone dark:prose-invert max-w-none text-foreground whitespace-pre-wrap font-body">
+              {summary}
             </div>
           )}
         </CardContent>
       </Card>
 
-      {summary && (
+      {summary && !isSummaryLoading && (
         <Card>
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Ask a Question</CardTitle>

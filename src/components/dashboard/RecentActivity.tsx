@@ -5,20 +5,77 @@ import { BookOpen, CheckCircle, TrendingUp } from 'lucide-react';
 import { TOPICS } from '@/lib/data';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { Progress } from '@/components/ui/progress';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface QuizScores {
   [key: string]: number;
 }
 
+type Topic = {
+  id: string;
+  name: string;
+  description: string;
+  fileName: string;
+};
+
 export default function RecentActivity() {
   const [scores] = useLocalStorage<QuizScores>('quiz-scores', {});
   const [viewedTopics] = useLocalStorage<string[]>('viewed-topics', []);
+  const [lastViewedTopic, setLastViewedTopic] = useState<Topic | null | undefined>(undefined);
 
   const totalQuizzes = TOPICS.length;
   const completedQuizzes = Object.keys(scores).length;
   const progressPercentage = totalQuizzes > 0 ? (completedQuizzes / totalQuizzes) * 100 : 0;
   
-  const lastViewedTopic = viewedTopics.length > 0 ? TOPICS.find(t => t.id === viewedTopics[viewedTopics.length - 1]) : null;
+  useEffect(() => {
+    if (viewedTopics.length > 0) {
+      const topic = TOPICS.find(t => t.id === viewedTopics[viewedTopics.length - 1]);
+      setLastViewedTopic(topic || null);
+    } else {
+      setLastViewedTopic(null);
+    }
+  }, [viewedTopics]);
+
+  const renderLastViewed = () => {
+    if (lastViewedTopic === undefined) {
+      return (
+        <div className="flex items-center p-3 -m-3">
+          <Skeleton className="h-10 w-10 rounded-lg" />
+          <div className="ml-4 space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-6 w-40" />
+          </div>
+        </div>
+      );
+    }
+    
+    if (lastViewedTopic) {
+      return (
+        <Link href={`/topics/${lastViewedTopic.id}`} className="flex items-center p-3 -m-3 rounded-lg hover:bg-muted/50 transition-colors">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+            <BookOpen className="h-6 w-6" />
+          </div>
+          <div className="ml-4">
+            <p className="text-sm font-medium text-muted-foreground">Continue reading</p>
+            <p className="text-lg font-semibold">{lastViewedTopic.name}</p>
+          </div>
+        </Link>
+      );
+    }
+
+    return (
+       <Link href={`/topics/${TOPICS[0].id}`} className="flex items-center p-3 -m-3 rounded-lg hover:bg-muted/50 transition-colors">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+          <BookOpen className="h-6 w-6" />
+        </div>
+        <div className="ml-4">
+          <p className="text-sm font-medium text-muted-foreground">Get started</p>
+          <p className="text-lg font-semibold">Explore your first topic</p>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -31,27 +88,7 @@ export default function RecentActivity() {
       </div>
 
       <div className="space-y-4">
-        {lastViewedTopic ? (
-          <Link href={`/topics/${lastViewedTopic.id}`} className="flex items-center p-3 -m-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
-              <BookOpen className="h-6 w-6" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Continue reading</p>
-              <p className="text-lg font-semibold">{lastViewedTopic.name}</p>
-            </div>
-          </Link>
-        ) : (
-           <Link href={`/topics/ai-bias`} className="flex items-center p-3 -m-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
-              <BookOpen className="h-6 w-6" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-muted-foreground">Get started</p>
-              <p className="text-lg font-semibold">Explore your first topic</p>
-            </div>
-          </Link>
-        )}
+        {renderLastViewed()}
 
         {Object.keys(scores).length > 0 ? (
           <Link href="/quizzes" className="flex items-center p-3 -m-3 rounded-lg hover:bg-muted/50 transition-colors">

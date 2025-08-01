@@ -5,8 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/Header';
 
 export const metadata: Metadata = {
-  title: 'Ethical Compass',
-  description: 'Navigating the ethics of technology.',
+  title: 'IS Explorer',
+  description: 'Navigating the world of Information Systems.',
 };
 
 export default function RootLayout({

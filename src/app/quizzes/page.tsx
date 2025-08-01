@@ -22,7 +22,7 @@ export default function QuizzesPage() {
     <div className="container mx-auto p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-3xl font-headline font-bold text-foreground">Quizzes</h1>
-        <p className="text-muted-foreground">Test your knowledge on key ethical topics.</p>
+        <p className="text-muted-foreground">Test your knowledge on key Information Systems topics.</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

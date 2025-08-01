@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
-import { summarizeEthicalTopic } from '@/ai/flows/summarize-ethical-topic';
-import { answerEthicalQuestion } from '@/ai/flows/answer-ethical-question';
+import { summarizeIsTopic } from '@/ai/flows/summarize-is-topic';
+import { answerIsQuestion } from '@/ai/flows/answer-is-question';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Bot, Lightbulb, Loader2, Send, Sparkles, Terminal } from 'lucide-react';
+import { Bot, Loader2, Send, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import useLocalStorage from '@/hooks/use-local-storage';
 
@@ -15,6 +15,7 @@ type Topic = {
   id: string;
   name: string;
   description: string;
+  fileName: string;
 };
 
 type TopicClientProps = {
@@ -41,7 +42,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
 
   const handleSummarize = () => {
     startSummaryTransition(async () => {
-      const result = await summarizeEthicalTopic({ topic: topic.name });
+      const result = await summarizeIsTopic({ topic: topic.name, fileName: topic.fileName });
       if (result.summary) {
         setSummary(result.summary);
       } else {
@@ -58,7 +59,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
     if (!question.trim()) return;
     startAnswerTransition(async () => {
       setAnswer('');
-      const result = await answerEthicalQuestion({ question, context: summary });
+      const result = await answerIsQuestion({ question, context: summary });
       if (result.answer) {
         setAnswer(result.answer);
       } else {
@@ -88,7 +89,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
               <Sparkles className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-xl font-semibold mb-2">Generate AI Summary</h3>
               <p className="text-muted-foreground mb-4 max-w-md">
-                Click the button below to get an AI-powered summary of this topic. The AI uses provided documents and its own knowledge.
+                Click the button below to get an AI-powered summary of this topic from its source document.
               </p>
               <Button onClick={handleSummarize} disabled={isSummaryLoading}>
                 {isSummaryLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -110,7 +111,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Textarea
-                placeholder={`e.g., How does AI bias affect hiring?`}
+                placeholder={`e.g., What is the role of a systems analyst?`}
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 className="bg-background"

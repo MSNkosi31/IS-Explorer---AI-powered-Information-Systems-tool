@@ -21,7 +21,7 @@ export default function Header() {
         <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
           <Compass className="h-6 w-6 text-primary" />
           <span className="hidden font-bold sm:inline-block font-headline text-lg">
-            Ethical Compass
+            IS Explorer
           </span>
         </Link>
         <nav className="flex items-center gap-4 text-sm lg:gap-6">

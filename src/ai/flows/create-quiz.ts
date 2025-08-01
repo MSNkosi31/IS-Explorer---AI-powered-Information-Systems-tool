@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview A flow for creating a quiz on an ethical topic.
+ * @fileOverview A flow for creating a quiz on an Information Systems topic.
  *
  * - createQuiz - A function that creates a quiz based on provided context.
  * - CreateQuizInput - The input type for the createQuiz function.
@@ -36,7 +36,7 @@ const prompt = ai.definePrompt({
   name: 'createQuizPrompt',
   input: {schema: CreateQuizInputSchema},
   output: {schema: QuizSchema},
-  prompt: `You are an expert in creating educational quizzes about ethical topics in technology. 
+  prompt: `You are an expert in creating educational quizzes about Information Systems topics. 
   
 Your task is to create a multiple-choice quiz with 3 questions based on the provided topic and context. Each question should have 4 options.
 

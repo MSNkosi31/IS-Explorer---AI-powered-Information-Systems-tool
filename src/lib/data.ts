@@ -1,90 +1,27 @@
 export const TOPICS = [
-  { id: 'algorithmic-decision-making', name: 'Algorithmic Decision-Making', description: 'Explore the fairness and transparency of algorithmic decision-making systems.' },
-  { id: 'generative-ai', name: 'Generative AI', description: 'Understand the capabilities and ethical implications of generative AI technologies.' },
+  { id: 'topic-1', name: 'Introduction to Information Systems', description: 'Core concepts of Information Systems.', fileName: 'topic-1.docx' },
+  { id: 'topic-2', name: 'Systems Analysis and Design', description: 'Methodologies for developing IS.', fileName: 'topic-2.docx' },
+  { id: 'topic-3', name: 'Database Management Systems', description: 'Organizing and managing data.', fileName: 'topic-3.docx' },
+  { id: 'topic-4', name: 'Data Communications and Networking', description: 'Principles of data transfer.', fileName: 'topic-4.docx' },
+  { id: 'topic-5', name: 'Cybersecurity and Information Assurance', description: 'Protecting information assets.', fileName: 'topic-5.docx' },
+  { id: 'topic-6', name: 'Cloud Computing', description: 'Leveraging cloud infrastructure.', fileName: 'topic-6.docx' },
+  { id: 'topic-7', name: 'Business Intelligence and Analytics', description: 'Using data for decision making.', fileName: 'topic-7.docx' },
+  { id: 'topic-8', name: 'Enterprise Systems', description: 'Large-scale application software.', fileName: 'topic-8.docx' },
+  { id: 'topic-9', name: 'IT Project Management', description: 'Managing technology projects.', fileName: 'topic-9.docx' },
+  { id: 'topic-10', name: 'Emerging Technologies and Trends', description: 'The future of Information Systems.', fileName: 'topic-10.docx' },
 ];
 
 export const DAILY_FACTS = [
-  "In 2018, it was discovered that a recruiting AI used by a major tech company was biased against female candidates.",
-  "The EU's GDPR, implemented in 2018, is one of the world's strictest data privacy regulations.",
-  "Some studies show that facial recognition systems have higher error rates for women and people of color.",
-  "The term 'surveillance capitalism' was coined by scholar Shoshana Zuboff in 2014.",
-  "Ethical frameworks for AI often draw from principles like beneficence, non-maleficence, autonomy, and justice.",
-  "The 'Trolley Problem' is a famous ethical thought experiment often applied to the programming of autonomous vehicles.",
-  "Data brokers create detailed profiles on individuals, often without their direct knowledge or consent.",
-  "Redlining, the discriminatory housing practice, has found a new digital form in biased mortgage-approval algorithms.",
-  "The 'Right to be Forgotten' allows individuals in some jurisdictions to have personal data removed from search engines.",
-  "Explainable AI (XAI) is a field dedicated to making complex AI 'black boxes' more transparent and understandable."
+  "The first commercial use of a computer was in 1951 by the J. Lyons & Co. catering organization in the UK.",
+  "The relational database model was invented by Edgar F. Codd at IBM in 1970.",
+  "ARPANET, the precursor to the modern internet, was established by the U.S. Department of Defense in 1969.",
+  "Metcalfe's Law states that the value of a telecommunications network is proportional to the square of the number of connected users.",
+  "The term 'Cloud Computing' was popularized by Amazon.com with the launch of Amazon Web Services in 2006.",
+  "A denial-of-service (DoS) attack is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users.",
+  "An ERP (Enterprise Resource Planning) system integrates all of a company's main business processes in real time.",
+  "Agile is an iterative approach to project management and software development that helps teams deliver value to their customers faster.",
+  "Moore's Law observes that the number of transistors on a microchip doubles about every two years.",
+  "SQL (Structured Query Language) is the standard language for dealing with relational databases."
 ];
 
-export const QUIZZES: Record<string, { title: string; questions: any[] }> = {
-  'algorithmic-decision-making': {
-    title: 'Algorithmic Decision-Making Quiz',
-    questions: [
-      {
-        question: "What is a key concern regarding algorithmic decision-making in the public sector?",
-        options: [
-          "The speed of the algorithms",
-          "The cost of implementation",
-          "The potential for biased or unfair outcomes",
-          "The brand of computer used"
-        ],
-        answer: "The potential for biased or unfair outcomes"
-      },
-      {
-        question: "What does 'transparency' in algorithmic systems refer to?",
-        options: [
-          "The algorithm's code being open source",
-          "The ability to understand how the algorithm makes its decisions",
-          "The algorithm being written in a simple programming language",
-          "The physical visibility of the server running the algorithm"
-        ],
-        answer: "The ability to understand how the algorithm makes its decisions"
-      },
-      {
-        question: "Which of the following is an example of a high-stakes decision where algorithms are used?",
-        options: [
-          "Recommending a movie",
-          "Choosing a restaurant",
-          "Determining credit scores",
-          "Selecting a music playlist"
-        ],
-        answer: "Determining credit scores"
-      }
-    ]
-  },
-  'generative-ai': {
-    title: 'Generative AI Quiz',
-    questions: [
-      {
-        question: "What is a primary capability of generative AI?",
-        options: [
-          "Creating new content like text, images, and music",
-          "Only analyzing existing data",
-          "Storing large amounts of information",
-          "Performing simple calculations"
-        ],
-        answer: "Creating new content like text, images, and music"
-      },
-      {
-        question: "What is a significant ethical concern related to generative AI?",
-        options: [
-          "It is too slow to be useful",
-          "It is not creative enough",
-          "The potential for creating convincing misinformation or 'deepfakes'",
-          "It requires too much electricity"
-        ],
-        answer: "The potential for creating convincing misinformation or 'deepfakes'"
-      },
-      {
-        question: "According to the provided text, what is a key challenge for organizations using generative AI?",
-        options: [
-          "Finding enough data to train the models",
-          "Ensuring the generated content is fair, unbiased, and safe",
-          "The high cost of AI hardware",
-          "Lack of interest from the public"
-        ],
-        answer: "Ensuring the generated content is fair, unbiased, and safe"
-      }
-    ]
-  },
-};
+export const QUIZZES: Record<string, { title: string; questions: any[] }> = {};

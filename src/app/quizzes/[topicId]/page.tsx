@@ -1,7 +1,7 @@
 import { TOPICS } from '@/lib/data';
 import QuizClient from '@/components/quizzes/QuizClient';
 import { notFound } from 'next/navigation';
-import { summarizeEthicalTopic } from '@/ai/flows/summarize-ethical-topic';
+import { summarizeIsTopic } from '@/ai/flows/summarize-is-topic';
 import { createQuiz, Quiz } from '@/ai/flows/create-quiz';
 
 
@@ -25,7 +25,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound();
   }
 
-  const summaryResult = await summarizeEthicalTopic({ topic: topic.name });
+  const summaryResult = await summarizeIsTopic({ topic: topic.name, fileName: topic.fileName });
   let quiz: Quiz;
   if (summaryResult.summary) {
     quiz = await createQuiz({ topic: topic.name, context: summaryResult.summary });

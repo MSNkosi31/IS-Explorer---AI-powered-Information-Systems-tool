@@ -62,6 +62,7 @@ const summarizeIsTopicFlow = ai.defineFlow(
     outputSchema: SummarizeIsTopicOutputSchema,
   },
   async (input) => {
+    // Construct path from the project root (where `pnpm dev` is run)
     const filePath = path.join(process.cwd(), 'public', 'base_data', input.fileName);
     let content = '';
 

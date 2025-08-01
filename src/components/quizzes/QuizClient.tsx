@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, XCircle, ArrowRight, RotateCw, Award } from 'lucide-react';
 import Link from 'next/link';
-import type { Quiz } from '@/ai/flows/create-quiz';
+import type { Quiz } from '@/ai/types/quiz';
 
 
 interface QuizClientProps {

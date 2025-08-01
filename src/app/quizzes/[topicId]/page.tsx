@@ -2,7 +2,8 @@ import { TOPICS } from '@/lib/data';
 import QuizClient from '@/components/quizzes/QuizClient';
 import { notFound } from 'next/navigation';
 import { summarizeIsTopic } from '@/ai/flows/summarize-is-topic';
-import { createQuiz, Quiz } from '@/ai/flows/create-quiz';
+import { createQuiz } from '@/ai/flows/create-quiz';
+import type { Quiz } from '@/ai/types/quiz';
 
 
 type QuizPageProps = {
@@ -25,7 +26,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound();
   }
 
-  const summaryResult = await summarizeIsTopic({ topic: topic.name, fileName: topic.fileName });
+  const summaryResult = await summarizeIsTopic({ topic: topic.name });
   let quiz: Quiz;
   if (summaryResult.summary) {
     quiz = await createQuiz({ topic: topic.name, context: summaryResult.summary });

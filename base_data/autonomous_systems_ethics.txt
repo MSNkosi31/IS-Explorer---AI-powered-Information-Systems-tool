@@ -1,0 +1,1 @@
+This document discusses the ethics of autonomous systems. A key challenge for self-driving cars is how to program them to handle unavoidable accident scenarios (a modern "trolley problem"). Another concern is autonomous weapons systems that could make life-or-death decisions without human intervention.

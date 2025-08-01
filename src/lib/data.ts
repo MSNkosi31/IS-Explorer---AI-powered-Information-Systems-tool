@@ -1,4 +1,6 @@
-export const TOPICS = [
+import type { Topic } from "./types";
+
+export const TOPICS: Topic[] = [
   { id: 'topic-1', name: 'Introduction to Information Systems', description: 'Core concepts of Information Systems.', fileName: 'topic-1.docx' },
   { id: 'topic-2', name: 'Systems Analysis and Design', description: 'Methodologies for developing IS.', fileName: 'topic-2.docx' },
   { id: 'topic-3', name: 'Database Management Systems', description: 'Organizing and managing data.', fileName: 'topic-3.docx' },

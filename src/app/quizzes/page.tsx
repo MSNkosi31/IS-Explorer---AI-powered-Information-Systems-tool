@@ -6,6 +6,10 @@ import useLocalStorage from '@/hooks/use-local-storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import QuizClient from '@/components/quizzes/QuizClient';
+import { useState } from 'react';
+import { Topic } from '@/lib/types';
+
 
 interface QuizScores {
   [key: string]: number;
@@ -17,6 +21,11 @@ interface QuizLengths {
 export default function QuizzesPage() {
   const [scores] = useLocalStorage<QuizScores>('quiz-scores', {});
   const [quizLengths] = useLocalStorage<QuizLengths>('quiz-lengths', {});
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+
+  if (selectedTopic) {
+    return <QuizClient topic={selectedTopic} onQuit={() => setSelectedTopic(null)} />;
+  }
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -29,7 +38,7 @@ export default function QuizzesPage() {
         {TOPICS.map((topic) => {
           const score = scores[topic.id];
           const isCompleted = score !== undefined;
-          const totalQuestions = quizLengths[topic.id] || 3;
+          const totalQuestions = quizLengths[topic.id] || 10;
           const percentage = isCompleted ? (score / totalQuestions) * 100 : 0;
 
           return (
@@ -49,21 +58,17 @@ export default function QuizzesPage() {
                       <p className="text-muted-foreground text-sm">Your Score</p>
                       <p className="text-4xl font-bold text-primary">{percentage.toFixed(0)}<span className="text-xl">%</span></p>
                     </div>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link href={`/quizzes/${topic.id}`}>
+                    <Button onClick={() => setSelectedTopic(topic)} variant="outline" className="w-full">
                         Retake Quiz <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
                     </Button>
                   </div>
                 ) : (
                   <div className="space-y-4 text-center">
                     <div className="text-muted-foreground">
-                      <p>{totalQuestions > 1 ? `${totalQuestions} questions` : 'Generating quiz...'}</p>
+                      <p>{totalQuestions > 1 ? `${totalQuestions} questions` : '10 questions'}</p>
                     </div>
-                    <Button asChild className="w-full">
-                      <Link href={`/quizzes/${topic.id}`}>
+                    <Button onClick={() => setSelectedTopic(topic)} className="w-full">
                         Start Quiz <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
                     </Button>
                   </div>
                 )}

@@ -18,7 +18,7 @@ const prompt = ai.definePrompt({
   output: {schema: QuizSchema},
   prompt: `You are an expert in creating educational quizzes about Information Systems topics. 
   
-Your task is to create a multiple-choice quiz with 3 questions based on the provided topic and context. Each question should have 4 options.
+Your task is to create a multiple-choice quiz with 10 questions based on the provided topic and context. Each question should have 4 options.
 
 Topic: {{{topic}}}
 

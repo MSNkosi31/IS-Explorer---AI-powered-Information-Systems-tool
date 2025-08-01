@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useTransition } from 'react';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,40 +9,69 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, XCircle, ArrowRight, RotateCw, Award } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircle, XCircle, ArrowRight, RotateCw, Award, Loader2, ServerCrash } from 'lucide-react';
 import type { Quiz } from '@/ai/types/quiz';
-
+import type { Topic } from '@/lib/types';
+import { createQuiz } from '@/ai/flows/create-quiz';
+import { summarizeIsTopic } from '@/ai/flows/summarize-is-topic';
+import { Skeleton } from '../ui/skeleton';
+import { LeaveIcon } from '../ui/icons';
 
 interface QuizClientProps {
-  topicId: string;
-  quiz: Quiz;
+  topic: Topic;
+  onQuit: () => void;
 }
 
 type QuizScores = { [key: string]: number };
 type QuizLengths = { [key: string]: number };
 
-export default function QuizClient({ topicId, quiz }: QuizClientProps) {
+export default function QuizClient({ topic, onQuit }: QuizClientProps) {
+  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [isQuizLoading, startQuizTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
+  
   const [scores, setScores] = useLocalStorage<QuizScores>('quiz-scores', {});
   const [quizLengths, setQuizLengths] = useLocalStorage<QuizLengths>('quiz-lengths', {});
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex) / quiz.questions.length) * 100;
+  const fetchQuiz = () => {
+    setError(null);
+    setQuiz(null);
+    startQuizTransition(async () => {
+      try {
+        const summaryResult = await summarizeIsTopic({ topic: topic.name });
+        if (summaryResult.summary) {
+          const generatedQuiz = await createQuiz({ topic: topic.name, context: summaryResult.summary });
+          setQuiz(generatedQuiz);
+        } else {
+          throw new Error('Could not generate summary for quiz.');
+        }
+      } catch (e: any) {
+        console.error(e);
+        setError('Failed to generate the quiz. Please try again.');
+      }
+    });
+  }
 
   useEffect(() => {
-    if (!quizLengths[topicId] || quizLengths[topicId] !== quiz.questions.length) {
-      setQuizLengths({...quizLengths, [topicId]: quiz.questions.length});
+    fetchQuiz();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topic.id]);
+
+  useEffect(() => {
+    if (quiz && (!quizLengths[topic.id] || quizLengths[topic.id] !== quiz.questions.length)) {
+      setQuizLengths({...quizLengths, [topic.id]: quiz.questions.length});
     }
-  }, [topicId, quiz.questions.length, quizLengths, setQuizLengths]);
+  }, [topic.id, quiz, quizLengths, setQuizLengths]);
 
   useEffect(() => {
     if(isFinished) {
-        const newScores = {...scores, [topicId]: score};
+        const newScores = {...scores, [topic.id]: score};
         setScores(newScores);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,7 +81,7 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
     setFeedback(null);
     setSelectedAnswer(null);
 
-    if (currentQuestionIndex < quiz.questions.length - 1) {
+    if (quiz && currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       setIsFinished(true);
@@ -60,7 +89,8 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswer) return;
+    if (!selectedAnswer || !quiz) return;
+    const currentQuestion = quiz.questions[currentQuestionIndex];
 
     if (selectedAnswer === currentQuestion.answer) {
       setScore(score + 1);
@@ -76,7 +106,61 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
     setScore(0);
     setIsFinished(false);
     setFeedback(null);
+    fetchQuiz();
   };
+
+  if (isQuizLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <Skeleton className="h-4 w-1/4" />
+          <Skeleton className="h-8 w-3/4" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Skeleton className="h-6 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </CardContent>
+        <CardFooter>
+          <Button disabled className="w-full">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Generating Quiz...
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  if (error) {
+     return (
+      <Card className="text-center">
+        <CardHeader>
+            <div className="mx-auto bg-destructive/20 text-destructive rounded-full p-4 w-fit mb-4">
+                <ServerCrash className="h-12 w-12" />
+            </div>
+          <CardTitle className="font-headline text-3xl">Error</CardTitle>
+          <CardDescription>{error}</CardDescription>
+        </CardHeader>
+        <CardFooter className="flex-col gap-4 sm:flex-row justify-center">
+          <Button onClick={handleRestart} variant="outline">
+            <RotateCw className="mr-2 h-4 w-4" />
+            Try Again
+          </Button>
+          <Button onClick={onQuit}>
+            <LeaveIcon className="mr-2 h-4 w-4" />
+            Quit
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+  
+  if (!quiz) return null;
+
+  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex) / quiz.questions.length) * 100;
   
   if (isFinished) {
     const percentage = (score / quiz.questions.length) * 100;
@@ -99,10 +183,11 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
             <RotateCw className="mr-2 h-4 w-4" />
             Take Again
           </Button>
-          <Button asChild variant="outline">
-            <Link href="/quizzes">
-              See All Quizzes
-            </Link>
+          <Button asChild variant="outline" onClick={onQuit}>
+             <button>
+                <LeaveIcon className="mr-2 h-4 w-4" />
+                Back to Quizzes
+            </button>
           </Button>
         </CardFooter>
       </Card>
@@ -112,7 +197,12 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
   return (
     <Card>
       <CardHeader>
-        <Progress value={progress} className="mb-4 h-2" />
+        <div className="flex justify-between items-center mb-4">
+            <Progress value={progress} className="h-2 w-full" />
+            <Button onClick={onQuit} variant="ghost" size="sm" className="ml-4 shrink-0">
+                <LeaveIcon className="mr-2 h-4 w-4" /> Quit
+            </Button>
+        </div>
         <CardTitle className="font-headline text-2xl">{quiz.title}</CardTitle>
         <CardDescription>
           Question {currentQuestionIndex + 1} of {quiz.questions.length}

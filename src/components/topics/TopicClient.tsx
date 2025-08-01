@@ -11,13 +11,8 @@ import { Bot, Loader2, Send, RotateCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Topic } from '@/lib/types';
 
-type Topic = {
-  id: string;
-  name: string;
-  description: string;
-  fileName: string;
-};
 
 type TopicClientProps = {
   topic: Topic;

@@ -42,7 +42,7 @@ const prompt = ai.definePrompt({
     context: z.string(),
   })},
   output: {schema: SummarizeIsTopicOutputSchema},
-  prompt: `You are an expert in Information Systems. Your job is to summarize the key concepts and issues of the following topic, based on the provided context.
+  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic, based on the provided context. Make sure to cover the topic in detail.
 
 Topic: {{{topic}}}
 

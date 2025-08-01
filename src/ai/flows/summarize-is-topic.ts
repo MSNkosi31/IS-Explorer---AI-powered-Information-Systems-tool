@@ -10,9 +10,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import * as fs from 'fs';
-import path from 'path';
-import mammoth from 'mammoth';
 
 const SummarizeIsTopicInputSchema = z.object({
   topic: z.string().describe('The Information Systems topic to summarize.'),
@@ -39,17 +36,11 @@ const prompt = ai.definePrompt({
   name: 'summarizeIsTopicPrompt',
   input: {schema: z.object({
     topic: z.string(),
-    context: z.string(),
   })},
   output: {schema: SummarizeIsTopicOutputSchema},
-  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic, based on the provided context. Make sure to cover the topic in detail.
+  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic. Make sure to cover the topic in detail.
 
 Topic: {{{topic}}}
-
-Context:
-{{{context}}}
-
-Please only include facts from the provided context and do not include any external knowledge.
 
 Summary:`, 
   
@@ -62,24 +53,7 @@ const summarizeIsTopicFlow = ai.defineFlow(
     outputSchema: SummarizeIsTopicOutputSchema,
   },
   async (input) => {
-    // Construct path from the project root (where `pnpm dev` is run)
-    const filePath = path.join(process.cwd(), 'public', 'base_data', input.fileName);
-    let content = '';
-
-    try {
-      if (fs.existsSync(filePath)) {
-        const result = await mammoth.extractRawText({ path: filePath });
-        content = result.value;
-      } else {
-        console.error('File not found:', filePath);
-        return { summary: 'Topic content could not be loaded.' };
-      }
-    } catch (error) {
-      console.error('Error reading docx file:', error);
-      return { summary: 'Error processing topic content.' };
-    }
-    
-    const {output} = await prompt({ topic: input.topic, context: content });
+    const {output} = await prompt({ topic: input.topic });
     return output!;
   }
 );

@@ -24,6 +24,7 @@ type Summaries = {
 
 export default function TopicClient({ topic }: TopicClientProps) {
   const [summaries, setSummaries] = useLocalStorage<Summaries>('topic-summaries', {});
+  const [clientHasMounted, setClientHasMounted] = useState(false);
   const summary = summaries[topic.id] || '';
   
   const [question, setQuestion] = useState('');
@@ -33,6 +34,10 @@ export default function TopicClient({ topic }: TopicClientProps) {
   const { toast } = useToast();
 
   const [viewedTopics, setViewedTopics] = useLocalStorage<string[]>('viewed-topics', []);
+
+  useEffect(() => {
+    setClientHasMounted(true);
+  }, []);
 
   const fetchSummary = () => {
      startSummaryTransition(async () => {
@@ -82,6 +87,28 @@ export default function TopicClient({ topic }: TopicClientProps) {
     fetchSummary();
   }
 
+  if (!clientHasMounted) {
+    return (
+       <div className="space-y-8">
+        <Card>
+            <CardHeader>
+                <Skeleton className="h-10 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <Card>
@@ -98,7 +125,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
           </div>
         </CardHeader>
         <CardContent>
-          {isSummaryLoading ? (
+          {isSummaryLoading && !summary ? (
             <div className="space-y-4">
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-full" />

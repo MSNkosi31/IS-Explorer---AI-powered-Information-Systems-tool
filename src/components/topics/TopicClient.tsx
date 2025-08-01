@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Bot, Loader2, Send } from 'lucide-react';
+import { Bot, Loader2, Send, RotateCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,8 +23,14 @@ type TopicClientProps = {
   topic: Topic;
 };
 
+type Summaries = {
+    [key: string]: string;
+}
+
 export default function TopicClient({ topic }: TopicClientProps) {
-  const [summary, setSummary] = useState('');
+  const [summaries, setSummaries] = useLocalStorage<Summaries>('topic-summaries', {});
+  const summary = summaries[topic.id] || '';
+  
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [isSummaryLoading, startSummaryTransition] = useTransition();
@@ -33,16 +39,11 @@ export default function TopicClient({ topic }: TopicClientProps) {
 
   const [viewedTopics, setViewedTopics] = useLocalStorage<string[]>('viewed-topics', []);
 
-  useEffect(() => {
-    if (!viewedTopics.includes(topic.id)) {
-      setViewedTopics([...viewedTopics, topic.id]);
-    }
-    
-    startSummaryTransition(async () => {
-      setSummary(''); // Clear previous summary
+  const fetchSummary = () => {
+     startSummaryTransition(async () => {
       const result = await summarizeIsTopic({ topic: topic.name });
       if (result.summary) {
-        setSummary(result.summary);
+        setSummaries(prev => ({...prev, [topic.id]: result.summary}));
       } else {
         toast({
           variant: 'destructive',
@@ -51,6 +52,16 @@ export default function TopicClient({ topic }: TopicClientProps) {
         });
       }
     });
+  }
+
+  useEffect(() => {
+    if (!viewedTopics.includes(topic.id)) {
+      setViewedTopics([...viewedTopics, topic.id]);
+    }
+    
+    if (!summary) {
+        fetchSummary();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic.id, topic.name]);
 
@@ -72,12 +83,24 @@ export default function TopicClient({ topic }: TopicClientProps) {
     });
   };
 
+  const handleRegenerate = () => {
+    fetchSummary();
+  }
+
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-4xl">{topic.name}</CardTitle>
-          <CardDescription>{topic.description}</CardDescription>
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="font-headline text-4xl">{topic.name}</CardTitle>
+              <CardDescription>{topic.description}</CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isSummaryLoading}>
+                <RotateCw className={`mr-2 h-4 w-4 ${isSummaryLoading ? 'animate-spin' : ''}`} />
+                Regenerate
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {isSummaryLoading ? (

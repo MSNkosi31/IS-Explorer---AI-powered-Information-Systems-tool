@@ -31,7 +31,7 @@ const prompt = ai.definePrompt({
   name: 'answerIsQuestionPrompt',
   input: {schema: AnswerIsQuestionInputSchema},
   output: {schema: AnswerIsQuestionOutputSchema},
-  prompt: `You are an AI assistant that answers questions about Information Systems topics. You will use the provided context to answer the question. If the context does not contain the answer, you can use your own knowledge, but you should clearly state that you are using external knowledge and cite your sources.
+  prompt: `You are an AI assistant that answers questions about Information Systems topics. You will use the provided context to answer the question. If the context does not contain the answer, you can use your own knowledge, but you should clearly state that you are using external knowledge and cite your sources. All responses must be in English.
 
 Context: {{{context}}}
 

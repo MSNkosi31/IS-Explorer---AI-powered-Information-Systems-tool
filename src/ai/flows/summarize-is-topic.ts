@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
     topic: z.string(),
   })},
   output: {schema: SummarizeIsTopicOutputSchema},
-  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic. 
+  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic. All content must be in English.
 
 Format your response using HTML. Use <h3> tags for headings. Do not use asterisks for emphasis or lists.
 

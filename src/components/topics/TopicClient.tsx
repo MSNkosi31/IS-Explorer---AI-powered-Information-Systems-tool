@@ -40,7 +40,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
     
     startSummaryTransition(async () => {
       setSummary(''); // Clear previous summary
-      const result = await summarizeIsTopic({ topic: topic.name, fileName: topic.fileName });
+      const result = await summarizeIsTopic({ topic: topic.name });
       if (result.summary) {
         setSummary(result.summary);
       } else {
@@ -52,7 +52,7 @@ export default function TopicClient({ topic }: TopicClientProps) {
       }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topic.id, topic.name, topic.fileName]);
+  }, [topic.id, topic.name]);
 
 
   const handleAskQuestion = () => {
@@ -89,9 +89,10 @@ export default function TopicClient({ topic }: TopicClientProps) {
               <Skeleton className="h-4 w-5/6" />
             </div>
           ) : (
-            <div className="prose prose-stone dark:prose-invert max-w-none text-foreground whitespace-pre-wrap font-body">
-              {summary}
-            </div>
+            <div 
+              className="prose prose-stone dark:prose-invert max-w-none text-foreground whitespace-pre-wrap font-body"
+              dangerouslySetInnerHTML={{ __html: summary }}
+            />
           )}
         </CardContent>
       </Card>

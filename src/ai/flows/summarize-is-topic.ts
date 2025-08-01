@@ -13,7 +13,6 @@ import {z} from 'genkit';
 
 const SummarizeIsTopicInputSchema = z.object({
   topic: z.string().describe('The Information Systems topic to summarize.'),
-  fileName: z.string().describe('The corresponding file name for the topic.')
 });
 export type SummarizeIsTopicInput = z.infer<
   typeof SummarizeIsTopicInputSchema
@@ -38,7 +37,9 @@ const prompt = ai.definePrompt({
     topic: z.string(),
   })},
   output: {schema: SummarizeIsTopicOutputSchema},
-  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic. Make sure to cover the topic in detail.
+  prompt: `You are an expert in Information Systems. Your job is to provide a comprehensive and extended summary of the key concepts, theories, and practical applications of the following topic. 
+
+Format your response using HTML. Use <h3> tags for headings. Do not use asterisks for emphasis or lists.
 
 Topic: {{{topic}}}
 

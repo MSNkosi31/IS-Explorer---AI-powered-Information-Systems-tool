@@ -1,9 +1,6 @@
 export const TOPICS = [
-  { id: 'ai-bias', name: 'AI Bias', description: 'Explore the nuances of bias in artificial intelligence systems.', icon: 'BrainCircuit' },
-  { id: 'data-privacy', name: 'Data Privacy', description: 'Understand the importance of protecting personal data.', icon: 'Lock' },
-  { id: 'algorithmic-transparency', name: 'Algorithmic Transparency', description: 'Learn about the need for clarity in how algorithms work.', icon: 'Search' },
-  { id: 'surveillance-capitalism', name: 'Surveillance Capitalism', description: 'Investigate the monetization of personal data.', icon: 'Eye' },
-  { id: 'autonomous-systems', name: 'Autonomous Systems', description: 'Consider the ethics of self-governing machines.', icon: 'Bot' },
+  { id: 'algorithmic-decision-making', name: 'Algorithmic Decision-Making', description: 'Explore the fairness and transparency of algorithmic decision-making systems.' },
+  { id: 'generative-ai', name: 'Generative AI', description: 'Understand the capabilities and ethical implications of generative AI technologies.' },
 ];
 
 export const DAILY_FACTS = [
@@ -20,139 +17,74 @@ export const DAILY_FACTS = [
 ];
 
 export const QUIZZES: Record<string, { title: string; questions: any[] }> = {
-  'ai-bias': {
-    title: 'AI Bias Quiz',
+  'algorithmic-decision-making': {
+    title: 'Algorithmic Decision-Making Quiz',
     questions: [
       {
-        question: 'What is a common source of bias in AI systems?',
+        question: "What is a key concern regarding algorithmic decision-making in the public sector?",
         options: [
-          'The programming language used',
-          'Biased training data',
-          'The speed of the processor',
-          'The color of the server rack'
+          "The speed of the algorithms",
+          "The cost of implementation",
+          "The potential for biased or unfair outcomes",
+          "The brand of computer used"
         ],
-        answer: 'Biased training data',
+        answer: "The potential for biased or unfair outcomes"
       },
       {
-        question: 'Which of these is a real-world example of AI bias?',
+        question: "What does 'transparency' in algorithmic systems refer to?",
         options: [
-          'An AI defeating a chess grandmaster',
-          'An AI that can write poetry',
-          'Facial recognition struggling to identify non-white faces',
-          'An AI that composes classical music'
+          "The algorithm's code being open source",
+          "The ability to understand how the algorithm makes its decisions",
+          "The algorithm being written in a simple programming language",
+          "The physical visibility of the server running the algorithm"
         ],
-        answer: 'Facial recognition struggling to identify non-white faces',
-      },
-       {
-        question: 'What is "algorithmic fairness"?',
-        options: [
-          'Ensuring algorithms are always correct',
-          'An effort to prevent algorithms from having discriminatory impacts',
-          'Making algorithms run faster on older hardware',
-          'A brand of ethical software'
-        ],
-        answer: 'An effort to prevent algorithms from having discriminatory impacts',
-      },
-    ],
-  },
-  'data-privacy': {
-    title: 'Data Privacy Quiz',
-    questions: [
-      {
-        question: "What does GDPR stand for?",
-        options: [
-          "General Data Protection Regulation",
-          "Global Data Privacy Rules",
-          "Government Data Protection Registry",
-          "General Digital Privacy Rights"
-        ],
-        answer: "General Data Protection Regulation",
+        answer: "The ability to understand how the algorithm makes its decisions"
       },
       {
-        question: "What is a 'data breach'?",
+        question: "Which of the following is an example of a high-stakes decision where algorithms are used?",
         options: [
-          "A successful attempt to access sensitive data",
-          "A type of data compression",
-          "A legal document about data usage",
-          "When a server runs out of memory"
+          "Recommending a movie",
+          "Choosing a restaurant",
+          "Determining credit scores",
+          "Selecting a music playlist"
         ],
-        answer: "A successful attempt to access sensitive data",
+        answer: "Determining credit scores"
       }
-    ],
+    ]
   },
-  'algorithmic-transparency': {
-    title: 'Algorithmic Transparency Quiz',
+  'generative-ai': {
+    title: 'Generative AI Quiz',
     questions: [
       {
-        question: "Why is algorithmic transparency important?",
+        question: "What is a primary capability of generative AI?",
         options: [
-          "It helps developers debug their code",
-          "It makes apps look more modern",
-          "It allows for accountability and checking for bias",
-          "It increases the algorithm's speed"
+          "Creating new content like text, images, and music",
+          "Only analyzing existing data",
+          "Storing large amounts of information",
+          "Performing simple calculations"
         ],
-        answer: "It allows for accountability and checking for bias",
+        answer: "Creating new content like text, images, and music"
       },
       {
-        question: "What is meant by an AI 'black box'?",
+        question: "What is a significant ethical concern related to generative AI?",
         options: [
-          "An AI that only works at night",
-          "A model whose internal workings are difficult for humans to understand",
-          "A secure hardware device for running AI",
-          "An AI that has been banned"
+          "It is too slow to be useful",
+          "It is not creative enough",
+          "The potential for creating convincing misinformation or 'deepfakes'",
+          "It requires too much electricity"
         ],
-        answer: "A model whose internal workings are difficult for humans to understand",
-      }
-    ],
-  },
-  'surveillance-capitalism': {
-    title: 'Surveillance Capitalism Quiz',
-    questions: [
-      {
-        question: "Who coined the term 'surveillance capitalism'?",
-        options: [
-          "Mark Zuckerberg",
-          "Tim Cook",
-          "Shoshana Zuboff",
-          "Edward Snowden"
-        ],
-        answer: "Shoshana Zuboff",
+        answer: "The potential for creating convincing misinformation or 'deepfakes'"
       },
       {
-        question: "What is the primary goal of surveillance capitalism?",
+        question: "According to the provided text, what is a key challenge for organizations using generative AI?",
         options: [
-          "To improve national security",
-          "To predict and modify human behavior for profit",
-          "To provide free online services",
-          "To catch criminals"
+          "Finding enough data to train the models",
+          "Ensuring the generated content is fair, unbiased, and safe",
+          "The high cost of AI hardware",
+          "Lack of interest from the public"
         ],
-        answer: "To predict and modify human behavior for profit",
+        answer: "Ensuring the generated content is fair, unbiased, and safe"
       }
-    ],
-  },
-  'autonomous-systems': {
-    title: 'Autonomous Systems Quiz',
-    questions: [
-      {
-        question: "The 'Trolley Problem' is often used to discuss the ethics of which technology?",
-        options: [
-          "Social media algorithms",
-          "Drones",
-          "Autonomous vehicles",
-          "Smart home assistants"
-        ],
-        answer: "Autonomous vehicles",
-      },
-      {
-        question: "What is a major ethical concern regarding autonomous weapons?",
-        options: [
-          "Their cost",
-          "Their susceptibility to hacking",
-          "The lack of human moral judgment in life-or-death decisions",
-          "Their weight"
-        ],
-        answer: "The lack of human moral judgment in life-or-death decisions",
-      }
-    ],
+    ]
   },
 };

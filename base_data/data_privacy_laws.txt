@@ -1,1 +1,0 @@
-This file contains information on data privacy laws. Regulations like GDPR in Europe and CCPA in California give consumers rights over their personal data, including the right to know what data is collected and the right to have it deleted.

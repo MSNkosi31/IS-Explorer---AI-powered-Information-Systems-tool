@@ -1,18 +1,22 @@
 'use client'
 
 import Link from 'next/link';
-import { TOPICS, QUIZZES } from '@/lib/data';
+import { TOPICS } from '@/lib/data';
 import useLocalStorage from '@/hooks/use-local-storage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CheckCircle, Percent } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 
 interface QuizScores {
+  [key: string]: number;
+}
+interface QuizLengths {
   [key: string]: number;
 }
 
 export default function QuizzesPage() {
   const [scores] = useLocalStorage<QuizScores>('quiz-scores', {});
+  const [quizLengths] = useLocalStorage<QuizLengths>('quiz-lengths', {});
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -23,18 +27,15 @@ export default function QuizzesPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {TOPICS.map((topic) => {
-          const quizData = QUIZZES[topic.id];
-          if (!quizData) return null;
-
           const score = scores[topic.id];
           const isCompleted = score !== undefined;
-          const totalQuestions = quizData.questions.length;
+          const totalQuestions = quizLengths[topic.id] || 3;
           const percentage = isCompleted ? (score / totalQuestions) * 100 : 0;
 
           return (
             <Card key={topic.id} className="flex flex-col">
               <CardHeader>
-                <CardTitle className="font-headline">{quizData.title}</CardTitle>
+                <CardTitle className="font-headline">{topic.name} Quiz</CardTitle>
                 <CardDescription>{topic.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col justify-end">
@@ -57,7 +58,7 @@ export default function QuizzesPage() {
                 ) : (
                   <div className="space-y-4 text-center">
                     <div className="text-muted-foreground">
-                      <p>{totalQuestions} questions</p>
+                      <p>{totalQuestions > 1 ? `${totalQuestions} questions` : 'Generating quiz...'}</p>
                     </div>
                     <Button asChild className="w-full">
                       <Link href={`/quizzes/${topic.id}`}>

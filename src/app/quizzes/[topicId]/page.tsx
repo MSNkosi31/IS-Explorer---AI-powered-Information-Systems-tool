@@ -1,6 +1,9 @@
-import { QUIZZES, TOPICS } from '@/lib/data';
+import { TOPICS } from '@/lib/data';
 import QuizClient from '@/components/quizzes/QuizClient';
 import { notFound } from 'next/navigation';
+import { summarizeEthicalTopic } from '@/ai/flows/summarize-ethical-topic';
+import { createQuiz, Quiz } from '@/ai/flows/create-quiz';
+
 
 type QuizPageProps = {
   params: {
@@ -14,12 +17,24 @@ export function generateStaticParams() {
   }));
 }
 
-export default function QuizPage({ params }: QuizPageProps) {
+export default async function QuizPage({ params }: QuizPageProps) {
   const { topicId } = params;
-  const quiz = QUIZZES[topicId];
   const topic = TOPICS.find(t => t.id === topicId);
 
-  if (!quiz || !topic) {
+  if (!topic) {
+    notFound();
+  }
+
+  const summaryResult = await summarizeEthicalTopic({ topic: topic.name });
+  let quiz: Quiz;
+  if (summaryResult.summary) {
+    quiz = await createQuiz({ topic: topic.name, context: summaryResult.summary });
+  } else {
+    // Fallback or error handling
+    return <div>Could not generate a quiz for this topic. Please try again later.</div>
+  }
+  
+  if (!quiz) {
     notFound();
   }
 

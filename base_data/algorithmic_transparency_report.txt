@@ -1,1 +1,0 @@
-This report covers algorithmic transparency. Many algorithms used for important decisions (like loan applications or criminal sentencing) are proprietary "black boxes," making it difficult to check for fairness or errors. Transparency initiatives advocate for making these processes understandable.

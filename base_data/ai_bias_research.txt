@@ -1,1 +1,0 @@
-This file contains research on AI bias. AI systems learn from data, and if that data contains biases, the AI will learn and perpetuate them. For example, if a hiring algorithm is trained on historical data from a male-dominated industry, it may learn to favor male candidates.

@@ -11,15 +11,8 @@ import { cn } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, XCircle, ArrowRight, RotateCw, Award } from 'lucide-react';
 import Link from 'next/link';
+import type { Quiz } from '@/ai/flows/create-quiz';
 
-interface Quiz {
-  title: string;
-  questions: {
-    question: string;
-    options: string[];
-    answer: string;
-  }[];
-}
 
 interface QuizClientProps {
   topicId: string;
@@ -27,6 +20,7 @@ interface QuizClientProps {
 }
 
 type QuizScores = { [key: string]: number };
+type QuizLengths = { [key: string]: number };
 
 export default function QuizClient({ topicId, quiz }: QuizClientProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -35,9 +29,16 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
   const [isFinished, setIsFinished] = useState(false);
   const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
   const [scores, setScores] = useLocalStorage<QuizScores>('quiz-scores', {});
-  
+  const [quizLengths, setQuizLengths] = useLocalStorage<QuizLengths>('quiz-lengths', {});
+
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex) / quiz.questions.length) * 100;
+
+  useEffect(() => {
+    if (!quizLengths[topicId] || quizLengths[topicId] !== quiz.questions.length) {
+      setQuizLengths({...quizLengths, [topicId]: quiz.questions.length});
+    }
+  }, [topicId, quiz.questions.length, quizLengths, setQuizLengths]);
 
   useEffect(() => {
     if(isFinished) {
@@ -152,7 +153,8 @@ export default function QuizClient({ topicId, quiz }: QuizClientProps) {
       <CardFooter>
         {feedback ? (
           <Button onClick={handleNext} className="w-full">
-            Next Question <ArrowRight className="ml-2 h-4 w-4" />
+            {currentQuestionIndex < quiz.questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         ) : (
           <Button onClick={handleSubmit} disabled={!selectedAnswer} className="w-full">

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TOPICS } from '@/lib/data';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 
 export default function TopicSidebar() {
   const pathname = usePathname();
@@ -15,19 +14,18 @@ export default function TopicSidebar() {
       {TOPICS.map((topic) => {
         const isActive = pathname === `/topics/${topic.id}`;
         return (
-          <Button
-            key={topic.id}
-            asChild
-            variant={isActive ? 'secondary' : 'ghost'}
-            className={cn(
-              "justify-start",
-              isActive && "font-bold text-primary"
-            )}
-          >
-            <Link href={`/topics/${topic.id}`}>
+            <Link 
+                key={topic.id}
+                href={`/topics/${topic.id}`}
+                className={cn(
+                    "justify-start px-4 py-2 rounded-md transition-all",
+                    "hover:text-primary hover:scale-105 hover:translate-x-2",
+                    "text-muted-foreground",
+                    isActive ? "font-bold text-primary bg-secondary" : ""
+                )}
+            >
               {topic.name}
             </Link>
-          </Button>
         );
       })}
     </nav>
